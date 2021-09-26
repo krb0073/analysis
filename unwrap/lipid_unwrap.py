@@ -3,7 +3,7 @@
 # @Email:  krb0073@mix.wvu.edu
 # @Filename: lipid_un.py
 # @Last modified by:   kbillings
-# @Last modified time: 2021-09-25T16:20:39-04:00
+# @Last modified time: 2021-09-26T15:07:15-04:00
 
 
 #!/usr/bin/env python3
@@ -51,6 +51,9 @@ def fullhelp():
      unwrapped. For making the trajecotry,the assumtion is made that the
      Lx,Ly or Lz of the P.B will not be greater than 1,000 Angstroums.
 
+     The output txt file contrain the radial position of the atom comparing it to the
+     center of mass to the bilayer.
+
     Usage: lipid_unwrap.py [OPTIONS] selection_string system_file trajectory_file
         --  selection_string identifies the atoms to be analyzed. They will be
             split by molecule number calculate position for every lipid adjusted
@@ -67,9 +70,14 @@ def fullhelp():
         --output_traj: output a dcd of the unwrapped trajectory defult(--output_traj 0)
         --output_prefix: prefix to use for the output defult is output
 
-    Exmaple
+    Exmaple:
+    python /media/bak12/Analysis/unwrap/lipid_unwrap.py --ouput_traj 1 --output_prefix='unwrapped_foo'
+    foo.psf 'resname == "POPC"' foo.dcd
 
-""")
+    We will obatian a dcd of the unwrapped trajectory with the name of unwrapped_foo.dcd
+    a pdb of unwrapped_foo.pdb to be used to veiw the dcd, and unwrapped_foo.txt that
+    has the radial distacne of the ceneter of the lipid to the COM of bilayer
+    at that frame for the POPC lipids in the membrane""")
 def findFix():
     """ find Fix is the takes the center befor it is unwrapped then checks the lipids
     until to see if the new postion has moved more than half the box then the box
@@ -77,11 +85,12 @@ def findFix():
      corrdinate of fixed atom still is lager than half the box a factor is multiped to
       the box lenght added to the system untill the distacne is within reason"""
     fix = loos.GCoord() # blank GCorrd() == (0,0,0)
-    a ,b ,c, d,e,f = 1, 1,1,1,1,1
-    check = True
-    while check:
-        diff = centers[index] -  prev_centers[index]
-        tracker = 0
+    a ,b ,c, d,e,f = 1, 1,1,1,1,1 # scaling factors of each
+    check = True # checks if the condtion is true
+    while check: # while the ditstance propational to a jump
+        diff = centers[index] -  prev_centers[index]  # final minus statrs
+        tracker = 0 # tracks which if it enterhs
+        # looking for points that jumpedd
         if diff.x() >  half_box.x():
             fix[0] -= box.x() * a
         elif diff.x() < -half_box.x():
@@ -93,24 +102,27 @@ def findFix():
         elif diff.y() < -half_box.y():
             fix[1] += box.y() * d
             tracker = 3
-
         if diff.z() > half_box.z():
             fix[2] -=  box.z() * e
             tracker = 4
         elif diff.z() < -half_box.z():
             fix[2] += box.z() * f
             tracker = 5
+        # the new postion is the wrapped postion plus the fix
         ans = centers[index] + fix
+        # if the distacne from the old location to the new is large than the
+        ## half_box
         if prev_centers[index].distance(ans) > half_box.x():
-            print('yup')
-            C = [x for x in centers[index]]
-            P = [x for x in prev_centers[index]]
-            # now find the exact thing that messed up
-            print(ans)
+            # using the value of tracker we find which if was used to fix the
+            ## bad corrdinate
             if tracker == 0:
+                # if the ans - previous is less than half box the jump
+                ## was from the postive side of the pbc to the negative
                 if ans.x() - prev_centers[index].x() < half_box.x():
                     a += 1
             elif tracker == 1:
+                # is the diffrecne is grater than half_box the jump was from
+                ## negative to postive
                 if ans.x() -prev_centers[index].x() > half_box.x():
                     b += 1
             elif tracker == 2:
@@ -126,7 +138,7 @@ def findFix():
                 if ans.z() - prev_center[index].y() > half_box.z():
                     d += 1
         else:
-            print("nope")
+            # if there was no large jump we exit the loop
             check = False
     return fix
 class FullHelp(argparse.Action):
@@ -149,7 +161,6 @@ parser.add_argument('--stride' , type=int,default=1,help="Read every nth frame")
 parser.add_argument('--output_traj',type=int,default=0,help='produce an unwrapped trajectory')
 parser.add_argument('--output_prefix',default='unwrapped_output',type=str,help='name of the tractory file to write (DCD format)')
 args = parser.parse_args()
-print(args)
 pre = args.output_prefix
 header = " ".join([f"{i}" for i in sys.argv])
 system = loos.createSystem(args.system_file)
@@ -163,24 +174,29 @@ first = True
 # loop into the frame
 ## this is the order of the lipid resname-resid-segname
 ### this will be usefull later
-outtraj = loos.DCDWriter(pre +".dcd")
+if args.output_traj: # fixes the issues where an emptry traj is made when
+## not wanting one out 
+    outtraj = loos.DCDWriter(pre +".dcd")
 header += '\nresname-resid-segid'
 big_list = " ".join([f"{lipids[i][0].resname()}-{lipids[i][0].resid()}-{lipids[i][0].segid()} " for i in range(len(lipids))])
 header += f"\n{big_list}"
-header += "\nframe Lipid_1_center_x Lipid_1_center_y Lipid_1_center_z ..."
+header += "\nframe Lipid_1_center_R Lipid_2_center_R Lipid_3_center_R ..."
 for frame in traj:
     # loop into the lipids
+    COM_R = loos.selectAtoms(system,args.selection_string).centerOfMass()
     centers = []
     for index in range(len(lipids)):
         centers.append(lipids[index].centroid()) # geometric center of the lipid
         # position 0 for frame 0 is always the starting position
     # in frame one nothing should have moved
+    R_coord = [traj.index()]
     if not first:
         box = frame.periodicBox() # get a G cord of the PBC
         half_box = 0.5 * box  # a square box's cneter is at the halfb way between all the postions
         for index in range(len(lipids)):
             fix =findFix()
             centers[index]+= fix
+            R_coord.append(np.sqrt((centers[index].x()-COM_R.x())**2 +(centers[index].y()-COM_R.y())**2+(centers[index].z()-COM_R.z())**2))
             # fix the werid jump issssues if the atoms move more than wanted
             # if the user has the flag on for the trajectory then this is True
     if args.output_traj:
@@ -207,14 +223,13 @@ for frame in traj:
             with open(f"{pre}.pdb","w") as out:
                 out.write(str(pdb))
     all = [traj.index()]
-    for i in centers:
-        for j in i:
-            all.append(j)
-    all = np.array(all)
     if first:
-        all_centers = all
+        for index in range(len(lipids)):
+            R_coord.append(np.sqrt((centers[index].x()-COM_R.x())**2 +(centers[index].y()-COM_R.y())**2+(centers[index].z()-COM_R.z())**2))
+        all_centers = np.array(R_coord)
     else:
-        all_centers = np.row_stack((all_centers,all))
+        R_coord = np.array((R_coord))
+        all_centers = np.row_stack((all_centers,R_coord))
     prev_centers = centers
     first = False
 np.savetxt(f'{pre}.txt',all_centers,header=header)
