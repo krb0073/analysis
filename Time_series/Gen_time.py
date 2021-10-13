@@ -4,6 +4,11 @@
 # @Filename: Gen_time.py
 # @Last modified by:   kbillings
 # @Last modified time: 2020-12-02T12:09:03-05:00
+
+
+"""
+using the a time dependant system  find the AVD stdev stderror varaince
+"""
 import sys
 import loos
 sys.path.append('/media/bak12/Analysis/loos_timeseries/')
