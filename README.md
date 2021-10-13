@@ -15,4 +15,5 @@ the Lmax linear regression code that i have done. Needs to to be looked at
 all the code that I use to gather the linear regression stuff 
 # Ret_codes
 All the codes i can find to attach the retainal and make the mutations of BR 
-
+# Solvent box 
+Takes a singel pdb of a molecule and makes a box of that molelcue
