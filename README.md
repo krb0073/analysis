@@ -11,4 +11,6 @@ A python code set that runs a very slow process of min heating and Eq
 as done by Dr. Joe Baker
 #regression 
 the Lmax linear regression code that i have done. Needs to to be looked at 
+#gather_data_regression
+all the code that I use to gather the linear regression stuff 
 
