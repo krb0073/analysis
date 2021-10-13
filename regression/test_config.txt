@@ -1,0 +1,85 @@
+@Author: Kyle Billings <kbillings>
+@Date:   2021-01-12T19:33:14-05:00
+@Email:  krb0073@mix.wvu.edu
+@Filename: test_config.txt
+@Last modified by:   kbillings
+@Last modified time: 2021-08-02T16:16:44-04:00
+
+
+
+# Kyle Billings 1/12/21
+# linear regression confing example
+####### required paramters ###############
+data_range 0 558940
+
+seed 1000
+
+# for the data range if you want to only count ever 10 frames you can put tem after for skip
+
+
+max_var 3
+
+Lmax 570 590 550 412 560 640
+
+#this will list the file prefixes to look for
+FILE_PREFIXES clean_bR_all clean_K_all clean_L_all clean_M_all clean_N_all clean_O_all
+
+# provide the list of what to call the indexes
+systems bR K L M N O
+
+#NOTE: inorder for the program to run Lamx, systems and FILE_PREFIXES must tbe the same lenght
+#Note 2: the program WILL NOT check to see if the order for each is correct. thats your job.
+
+# there are two methods that are supported at this time
+
+# this will only use one of the sets and do leave one out crossvaialdtion for modeling
+#method LOOCV
+
+method KFOLD
+
+####### paramters that can be added ########################
+
+# setting a tolerance in the file will ensire that the data point of an obseravtion will be
+## spread out at leat that much e.i if TOLERANCE is set to 0.5 all values must be greater than 0.5 from each other
+
+#TOLERANCE 0
+
+# if the purge_cutoff is on then the values with preason coerrleations greater than it will be removed
+## the min values is 0.01
+
+purge_cutoff 0.5
+
+# if Nfolds is on the data will be split into that many sets before the medain values are taken
+
+Nfolds 10
+
+# change the output dir loaction using
+
+DIR_NAME /media/bak22/BR_Photo/BR/newDataSet/DATAall/cleaned_data/
+
+# if the suffix of your data files is not dat use this to cahnge it
+
+#suffix txt
+
+# to include the area under the curve  use this setting
+
+#AUC ./1600877851_RMSF/
+
+# to change the number of regression graphs for each number of varaibles use
+
+KEEP_NUM 3
+
+# the defult scoring method to campre between line from the same number of var is MSE
+# but BIC AIC and RSS are all supproted
+
+SCORING_METRIC MSE
+
+# when doing the 10% validation method we set the flipp to ture by
+
+Flipp False
+
+# if you want to do a train test split and not use a set of data for modeling then
+
+NUMBER_LEFT_OUT 5
+### if you do not want the data mixed
+#NO_MIX
