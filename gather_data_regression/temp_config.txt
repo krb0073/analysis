@@ -1,0 +1,70 @@
+@Author: Kyle Billings <kbillings>
+@Date:   2021-05-21T11:22:43-04:00
+@Email:  krb0073@mix.wvu.edu
+@Filename: temp_config.txt
+@Last modified by:   kbillings
+@Last modified time: 2021-07-07T16:09:56-04:00
+
+
+
+# kyle kbillings
+system DARK_1 /media/bak11/DARK_and_K/DARK_1/bpr_dark.psf /media/bak11/DARK_and_K/DARK_1/bpr_run1-81_stride200_wrapped_recentred.dcd
+system DARK_2 /media/bak11/DARK_and_K/DARK_2/bpr.psf /media/bak11/DARK_and_K/DARK_2/bpr_run1-33_stride200_recentered.dcd
+system DARK_3 /media/bak11/DARK_and_K/DARK_3/bpr.psf /media/bak11/DARK_and_K/DARK_3/bpr_run1-34_stride200_recentered.dcd
+system K_1 /media/bak11/DARK_and_K/K_1/bpr.psf /media/bak11/DARK_and_K/K_1/bpr-137_stirde100-wrapped-recent.dcd
+system K_2 /media/bak11/DARK_and_K/K_2/bpr.psf /media/bak11/DARK_and_K/K_2/bpr_run12-118_stride250-recent.dcd
+system K_3 /media/bak11/DARK_and_K/K_3/bpr.psf /media/bak11/DARK_and_K/K_3/bpr_run12-96_stride250_recent.dcd
+system M_1 /media/bak11/M_TRAJ/m3/all-ion-new.psf /media/bak11/M_TRAJ/m3/Small_merge.dcd
+system M_2 /media/bak11/M_TRAJ/m4/all-ion-new.psf /media/bak11/M_TRAJ/m4/Small_merge.dcd
+system M_3 /media/bak11/M_TRAJ/m5/all-ion-new.psf /media/bak11/M_TRAJ/m5/Small_merge.dcd
+DIHEDRAL C13 C14 C15 NZ
+DIHEDRAL C20 C13 C14 C15
+DIHEDRAL C19 C9 C10 C11
+DIHEDRAL C12 C13 C14 C15
+DIHEDRAL C11 C12 C13 C14
+DIHEDRAL C11 C12 C13 C20
+DIHEDRAL C9 C10 C11 C12
+DIHEDRAL C10 C11 C12 C13
+DIHEDRAL C17 C1 C6 C7
+DIHEDRAL C8 C9 C10 C11
+DIHEDRAL C18 C5 C6 C7
+DIHEDRAL C16 C1 C6 C7
+DIHEDRAL C7 C8 C9 C10
+DIHEDRAL C7 C8 C9 C19
+DIHEDRAL C5 C6 C7 C8
+DIHEDRAL C6 C7 C8 C9
+DIHEDRAL C16 C1 C6 C5
+DIHEDRAL C17 C1 C6 C5
+DIHEDRAL C17 C1 C2 C3
+DIHEDRAL C4 C5 C6 C7
+DIHEDRAL C6 C1 C2 C3
+DIHEDRAL C16 C1 C2 C3
+DIHEDRAL C3 C4 C5 C6
+DIHEDRAL C3 C4 C5 C18
+DIHEDRAL C2 C1 C6 C5
+DIHEDRAL C2 C1 C6 C7
+DIHEDRAL C1 C2 C3 C4
+DIHEDRAL C2 C3 C4 C5
+DIHEDRAL C18 C5 C6 C1
+DIHEDRAL C1 C6 C7 C8
+DIHEDRAL C14 C15 NZ CE
+DIHEDRAL C4 C5 C6 C1
+DIHEDRAL C CA CB CG
+DIHEDRAL CD CE NZ C15
+DIHEDRAL CB CA C O
+DIHEDRAL CG CD CE NZ
+DIHEDRAL CA CB CG CD
+DIHEDRAL CB CG CD CE
+DIHEDRAL N CA CB CG
+DIHEDRAL N CA C O
+angle C5 C6 C7
+angle NZ C15 C2
+angle C2 C6 C7
+angle NZ C10 C2
+SKip 0
+stride 1
+lipid resname =~ '^(POPE|POPG)$' && name == 'P'
+ORINATION C19 C9
+ORINATION C20 C13
+out /media/bak11/RET_dark_K_M
+cores 12
