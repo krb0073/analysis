@@ -15,6 +15,7 @@ import multiprocessing as mp
 # all the function i need to use in one place
 config = sys.argv[1]
 def dihe_points(p1 , p2 , p3 , p4):
+"""turns four points into numpy arrays"""
     val1 = p1.centerOfMass()
     val2 = p2.centerOfMass()
     val3 = p3.centerOfMass()
@@ -29,7 +30,7 @@ def dihe_points(p1 , p2 , p3 , p4):
     P4 = toNp(val4)
     return P1 , P2 , P3 , P4
 def calc_q_vectors(P1,P2,P3,P4):
-###Function to calculate q vectors###
+"""Function to calculate q vectors"""
     import numpy as np
 # Calculate coordinates for vectors q1, q2 and q3
     q1 = np.subtract(P2,P1) # b - a
@@ -37,7 +38,7 @@ def calc_q_vectors(P1,P2,P3,P4):
     q3 = np.subtract(P4,P3) # d - c
     return q1,q2,q3
 def calc_cross_vectors(q1,q2,q3):
-    ###Function to calculate cross vectors###
+    """Function to calculate cross vectors"""
     import numpy as np
     # Calculate cross vectors
     q1_x_q2 = np.cross(q1,q2)
@@ -45,7 +46,7 @@ def calc_cross_vectors(q1,q2,q3):
     return q1_x_q2, q2_x_q3
 
 def calc_nornals(q1_x_q2,q2_x_q3):
-    ###Function to calculate normal vectors to planes###
+    """Function to calculate normal vectors to planes"""
     import numpy as np
     # Calculate normal vectors
     n1 = q1_x_q2/np.sqrt(np.dot(q1_x_q2,q1_x_q2))
@@ -53,7 +54,7 @@ def calc_nornals(q1_x_q2,q2_x_q3):
     return n1,n2
 
 def calc_orthogonal_unit_vectors(n2,q2):
-###Function to calculate orthogonal unit vectors###
+"""Function to calculate orthogonal unit vectors"""
     import numpy as np
     # Calculate unit vectors
     u1 = n2
@@ -62,7 +63,7 @@ def calc_orthogonal_unit_vectors(n2,q2):
     return u1,u2,u3
 
 def calc_dihedral_angle(n1,u1,u2,u3):
-        ###Function to calculate dihedral angle###
+    """Function to calculate dihedral angle"""
     import numpy as np
     import math
     # Calculate cosine and sine
@@ -76,6 +77,7 @@ def calc_dihedral_angle(n1,u1,u2,u3):
     return theta_deg
 
 def obtain_dihedral_angel(sel1,sel2,sel3,sel4):
+""" using  four selections output a diehdral angle"""
     p1 , p2 , p3 , p4 = dihe_points(sel1, sel2 ,sel3, sel4)
     q1,q2,q3 = calc_q_vectors(p1,p2,p3,p4)
     # Call calc_cross_vectors(q1,q2,q3) function
@@ -88,10 +90,12 @@ def obtain_dihedral_angel(sel1,sel2,sel3,sel4):
     theta_deg = calc_dihedral_angle(n1,u1,u2,u3)
     return theta_deg
 def toNp(point):
+"""make any point into a numpy array"""
     p = np.zeros(3)
     p[:] = [point[0] , point[1] , point[2]]
     return p
 def ANG(p1,p2,p3):
+"""find the angle between 3 atoms"""
     ba = p1 - p2
     bc = p3 - p2
     cosine_angle = np.dot(ba, bc) / (np.linalg.norm(ba) * np.linalg.norm(bc))
@@ -99,6 +103,7 @@ def ANG(p1,p2,p3):
     deg = np.degrees(angle)
     return deg
 def obtain_user_angel(sel1,sel2,sel3):
+"""using Three selections find the angle between the points"""
     val1 = sel1.centerOfMass()
     val2 = sel2ProcessPoolExecutor(max_workers=3).centerOfMass()
     val3 = sel3.centerOfMass()
@@ -117,6 +122,7 @@ def vectorAngles(A,B): # to find the angle
     sinang = np.linalg.norm(np.cross(A,B))
     return  np.arctan2(sinang, cosang) * 180 / np.pi
 class readConfig:
+"""Class to read a confing flie to limit the number of arugments"""
     def __init__(self,FILE):
         self.trajs = [] #
         self.dihe = [] #
@@ -195,6 +201,7 @@ class readConfig:
                 nc = int(line.split()[1])
                 self.n_cores = nc
 class system_setup(readConfig):
+
     def load_traj(self,model,traj):
         self.model_name = model
         self.traj_name = traj
@@ -210,6 +217,7 @@ class system_setup(readConfig):
             print("traj could not not be loaded")
             sys.exit(0)
     def find_dihe_overtime(self,dihe_sel,system_name,psf,dcd):
+"""from that atoms given the the config file we find the DIHE over time """
         self.load_traj(psf,dcd)
         atom1 ,atom2,atom3,atom4 = dihe_sel.split()
         Sel1 = loos.selectAtoms(self.model, self.ret_name +' '+f'&& name == "{atom1}"')
@@ -233,6 +241,7 @@ class system_setup(readConfig):
             int_frame += self.stride
         file.close()
     def find_angel_overtime(self,ang_sel,system_name,psf,dcd):
+"""find the anagle using the config"""
         self.load_traj(psf,dcd)
         atom1 ,atom2 ,atom3 = ang_sel.split()
         Sel1 = loos.selectAtoms(self.model, self.ret_name +' '+f'&& name == "{atom1}"')
@@ -255,6 +264,7 @@ class system_setup(readConfig):
             f += self.stride
         file.close()
     def find_ornatation_to_normal(self,orination_atoms,system_name,psf,dcd):
+"""find the ornatation to the bilayer normal using the selection in the confing"""
         self.load_traj(psf,dcd)
         lipid = loos.selectAtoms(self.model,self.lipid_sel)
         atom1 , atom2 = orination_atoms.split()
@@ -314,5 +324,7 @@ class system_setup(readConfig):
                 pool.close()
                 pool.join()
 
-run  = system_setup(config)
-run.main()
+
+if __name__ in "__main__":
+	run  = system_setup(config)
+	run.main()
