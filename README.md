@@ -19,4 +19,5 @@ All the codes i can find to attach the retainal and make the mutations of BR
 Takes a singel pdb of a molecule and makes a box of that molelcue
 # Time series 
 A code that gives statical information base on time series data. 
-
+# binning 
+codes for making histgrams of 1d and 2D from time series data.
