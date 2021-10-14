@@ -21,7 +21,7 @@ foreach S  {  189 185 182} {
 	patch GLUP PRO:194
 	regenerate angles dihedrals
 	patch SCK1 PRO:216 RET:301
-	#regenerate angles dihedrals
+	regenerate angles dihedrals
 	guesscoord
 	writepsf ret_$S.psf
 	writepdb ret_$S.pdb
