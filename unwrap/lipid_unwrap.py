@@ -194,7 +194,7 @@ if __name__ in '__main__':
     # making a numpy array to save the coorinates
     num_lipids = len(lipids)
     num_frames= len(traj)
-    all_centers = np.zeros((num_lipids,num_frames))
+    all_centers = np.zeros((num_lipids*3,num_frames))
     # loop into the frame
     if args.output_traj:
         outtraj = loos.DCDWriter(pre + ".dcd")
@@ -204,7 +204,7 @@ if __name__ in '__main__':
     big_list = " ".join(
         [f"{lipids[i][0].resname()}-{lipids[i][0].resid()}-{lipids[i][0].segid()} " for i in range(len(lipids))])
     header += f"\n{big_list}"
-    header += "\nLipid_1_center_R Lipid_2_center_R Lipid_3_center_R ..."
+    header += "\nLipid_1_center_X Lipid_1_center_Y Lipid_1_center_Z ..."
     for frame in traj:
         # shift the lipids such that their total centroid is at the origin
         COM_R = loos.selectAtoms(system, args.selection_string).centroid()
@@ -252,20 +252,11 @@ if __name__ in '__main__':
                 with open(f"{pre}.pdb", "w") as out:
                     out.write(str(pdb))
             # now loop into the array of R_coord input the values
-        for index in range(len(lipids)):
-                # find the lenght of the centers indexs
-            all_centers[index,traj.index()] = centers[index].length()
-        """ if first:
-            for index in range(len(lipids)):
-                R_coord.append(centers[index].length())
-            all_centers = np.array(R_coord)
-
-        # TODO: you're doing this every frame? That's going to be
-        # insanely slow and wasteful. You're much better off just
-        # allocating a num_frames x num_lipids 2D array right at the beginning
-        else:
-            R_coord = np.array((R_coord))
-            all_centers = np.row_stack((all_centers, R_coord))"""
+        cnt = 0 # counter for indexzinf
+        for index in range(0,len(lipids)): # for each lipid
+            for c in centers[index]: # for the x,y,z postion of that lipid
+                all_centers[cnt,traj.index()] = c # store the x,y,z
+                cnt += 1
         prev_centers = centers
         first = False
     np.savetxt(f'{pre}.txt', all_centers, header=header)
