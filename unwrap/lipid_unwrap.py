@@ -194,7 +194,7 @@ if __name__ in '__main__':
     # making a numpy array to save the coorinates
     num_lipids = len(lipids)
     num_frames= len(traj)
-    all_centers = np.zeros((num_lipids*3,num_frames))
+    all_centers = np.zeros((num_frames,num_lipids*3))
     # loop into the frame
     if args.output_traj:
         outtraj = loos.DCDWriter(pre + ".dcd")
@@ -255,7 +255,7 @@ if __name__ in '__main__':
         cnt = 0 # counter for indexzinf
         for index in range(0,len(lipids)): # for each lipid
             for c in centers[index]: # for the x,y,z postion of that lipid
-                all_centers[cnt,traj.index()] = c # store the x,y,z
+                all_centers[traj.index(),cnt] = c # store the x,y,z
                 cnt += 1
         prev_centers = centers
         first = False
