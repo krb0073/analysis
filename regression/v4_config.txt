@@ -1,0 +1,55 @@
+#### this is the config to run the linear regression code
+# random seed for the run
+seed 420
+
+# if we want more than one data set we can fix the values
+#mix
+
+# set the path for the out dir
+OUTPUTDIR /media/bak11/KylesStuff/
+
+# data_range set the start index , stop index , and stride of the data
+#data_range 0 50
+
+# use the skew calcaution to find the best way to calc data
+SKEW_CALC_VALS
+
+# do the histogram method
+use_hist
+
+# set the N_sets if we want more than one set
+N_sets 5
+
+# set N_folds to do the k fold method
+#N_FOLDS 5
+
+# DATA_LOCATION place where all the regression data is given
+DATA_LOCATION /media/bak22/Kylesstuff/BR_Photo/BR/newDataSet/DATAall/cleaned_data
+
+# ending suffix for the data in the regression stuff
+#SUFFIX .dat
+
+# SYSTEM_PREFIXES is all of the starts of the files with the regression data
+SYSTEM_PREFIXES clean_bR_all clean_K_all clean_L_all clean_M_all clean_N_all clean_O_all
+
+# list of all LMAX values
+LMAXS 570 590 550 412 560 640
+
+# for the histogram data we need to set the devation of each l vauels
+DEVS 10 20 30 40 50 60
+
+# CALC_TYPE type of calc to do for this stuff defualt mean
+# will be overwirtten by SKEW_CALC_VALS True
+#CALC_TYPE mean
+
+# if we cant to only use data set with normally distrabuted vaules with a range
+#SKEW_TOLERANCE 1.0
+
+# we we want to really do a through job in checking for normal dsn
+# we can pick from jarque_bera(0), Kolmogorov-Smirnov
+#norm_test 1
+
+# setting the P value for the norm test
+#p_value 0.05
+
+DIFF_TOL 10
