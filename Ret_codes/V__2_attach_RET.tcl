@@ -9,7 +9,7 @@ pdbalias residue HOH TIP3
 # make the segments
 foreach S  {  189 185 182} {
 	for {set i 1} {$i <= 3} {incr i} {
-		set my_path "/media/bak22/BR_Photo/BR/newer_mutants/alltrans/$S/$i"
+		set my_path "/media/bak11/KylesStuff/newer_mutants/cis/$S/$i"
 		puts $S
 		resetpsf
 	# retinal
@@ -22,7 +22,7 @@ foreach S  {  189 185 182} {
 		regenerate angles dihedrals
 		patch GLUP PRO:194
 		regenerate angles dihedrals
-		patch SCK1 PRO:216 PRO:250
+		patch SCK1 PRO:216 PRO:301
 		regenerate angles dihedrals
 		guesscoord
 		writepsf ${my_path}/regen_ret.psf
