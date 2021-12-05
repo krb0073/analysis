@@ -20,3 +20,7 @@ Takes a singel pdb of a molecule and makes a box of that molelcue. From there a 
 A code that gives statical information base on time series data. 
 ## binning 
 codes for making histgrams of 1d and 2D from time series data.
+## retinal_area 
+A short code to look the ring postion of the retinal and the angel from the 
+the normal
+
